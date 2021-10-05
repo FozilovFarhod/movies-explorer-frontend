@@ -44,10 +44,11 @@ function MoviesCard() {
   // tempVar
   // const isOwn = true;
   function handleClick() {
-
+    console.log('link to youtube trailer');
   }
   //
   function handleLikeClick() {
+    console.log('like click');
   }
   //
   // function handleDeleteCard() {
@@ -69,7 +70,7 @@ function MoviesCard() {
               <p className='card__movie-duration'>{getTimeFromMins(card[0].duration)}</p>
             </div>
           <button type="button" aria-label="addToSavedIcon"
-                  className='card__button_type_liked' onClick={handleLikeClick}>
+                  className='card__button_type_like' onClick={handleLikeClick}>
           </button>
         </li>
         <li className="card" id={card[0].id}>
