@@ -1,0 +1,121 @@
+.card {
+    position: relative;
+}
+.card__image {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.card__image-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 14px 14px 0;
+}
+.card__title {
+    font-size: 13px;
+    line-height: 1.23;
+    font-weight: 500;
+    margin: 0;
+}
+.card__movie-duration {
+    margin: 0;
+    min-width: 52px;
+    text-align: right;
+    font-size: 11px;
+    line-height: 0.91;
+    color: #A0A0A0;
+}
+.card__button_type_like {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    min-width: 72px;
+    min-height: 21px;
+    border-radius: 30px;
+    background-color: #F9F9F9;
+    font-size: 10px;
+    line-height: 0.91;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+.card__button_type_like:after {
+    content: 'Сохранить';
+    position: absolute;
+    top: 28%;
+    right: 10px;
+}
+.card__button_type_liked {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 21px;
+    height: 21px;
+    border: none;
+    border-radius: 50%;
+    background-color: #FF3055;
+    padding: 0;
+    outline: none;
+}
+.card__button_type_liked:after {
+    content: '';
+    position: absolute;
+    top: 38%;
+    left: 31%;
+    transform: rotate(-45deg);
+    width: 7px;
+    height: 3px;
+    border-left: 1.3px solid #FFF;
+    border-bottom: 1.3px solid #FFF;
+    cursor: pointer;
+}
+.card__button_type_dislike {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 21px;
+    height: 21px;
+    border: none;
+    border-radius: 50%;
+    background-color: #F5F5F5;
+    padding: 0;
+    outline: none;
+}
+.card__button_type_dislike:after {
+    content: '+';
+    font-size: 18px;
+    font-weight: 500;
+    color: #000;
+    position: absolute;
+    top: 0;
+    left: 20%;
+    transform: rotate(-45deg);
+    cursor: pointer;
+}
+@media screen and (max-width: 768px) and (min-width: 480px) {
+    .card__image-caption {
+        margin: 25px 0 0;
+    }
+}
+
+@media screen and (max-width: 479px) and (min-width: 320px) {
+    .card__image-title {
+        font-size: 12px;
+        line-height: 1.25;
+    }
+    .card__button_type_like {
+        top: 10px;
+        right: 10px;
+    }
+    .card__button_type_liked {
+        top: 10px;
+        right: 10px;
+    }
+    .card__button_type_dislike {
+        top: 10px;
+        right: 10px;
+    }
+    }
