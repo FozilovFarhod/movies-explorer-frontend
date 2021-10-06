@@ -48,7 +48,7 @@
     font-weight: 500;
 }
 .about-me__article-text {
-    margin: 26px 0 0;
+    margin: 26px 30px 0 0;
 }
 .about-me__social-links {
     padding: 0;
@@ -89,7 +89,7 @@
     }
     .about-me__article-text {
         max-width: 364px;
-        margin: 20px 0 0;
+        margin: 20px 20px 0 0;
         font-size: 12px;
         line-height: 1.5;
     }

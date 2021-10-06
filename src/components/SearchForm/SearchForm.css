@@ -18,9 +18,14 @@
     line-height: 1.3;
     padding: 0;
     margin-left: 22px;
+    margin-right: 22px;
     border: none;
-    outline: none;
     background-color: #F9F9F9;
+    flex-grow: 1;
+}
+.search-form__input_type_text:focus {
+    outline-color: rgba(0, 0, 0, 0.1);
+    background-color: #FFF;
 }
 .search-form__button {
     height: 34px;
@@ -55,6 +60,8 @@
         margin-top: 80px;
     }
     .search-form__input_type_text {
+        margin-left: 15px;
+        margin-right: 15px;
         font-size: 11px;
         line-height: 1.55;
     }
