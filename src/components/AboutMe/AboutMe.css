@@ -32,6 +32,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    margin-right: 30px;
 }
 
 .about-me__name {
@@ -48,7 +49,7 @@
     font-weight: 500;
 }
 .about-me__article-text {
-    margin: 26px 30px 0 0;
+    margin: 26px 0 0;
 }
 .about-me__social-links {
     padding: 0;
@@ -89,7 +90,7 @@
     }
     .about-me__article-text {
         max-width: 364px;
-        margin: 20px 20px 0 0;
+        margin: 20px 0 0;
         font-size: 12px;
         line-height: 1.5;
     }
@@ -100,8 +101,11 @@
     .about-me__social-links {
         margin: 87px 0 0;
     }
+    .about-me__text-block {
+        margin-right: 15px;
+    }
 }
-@media screen and (max-width: 479px) and (min-width: 320px) {
+@media screen and (max-width: 520px) and (min-width: 320px) {
     .about-me {
         width: calc(100% - 2 * 14px);
         margin: 70px 69px 0;
