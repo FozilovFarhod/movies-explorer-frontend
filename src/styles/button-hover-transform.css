@@ -1,0 +1,7 @@
+.button-hover-transform {
+    transition-property: transform;
+    transition-duration: 0.2s;
+}
+.button-hover-transform:hover {
+    transform: translateY(1px);
+}

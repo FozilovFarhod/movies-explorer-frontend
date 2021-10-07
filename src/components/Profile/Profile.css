@@ -1,0 +1,125 @@
+.profile {
+    margin: 74px auto 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.profile__edit-profile-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 123px auto 0;
+    min-width: 410px;
+}
+
+.profile__title {
+    font-size: 24px;
+    line-height: 1.21;
+    font-weight: 500;
+    margin: 0;
+}
+
+.profile__input-field {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #E8E8E8;
+    margin-bottom: 18px;
+}
+
+.profile__input-field:nth-last-child(2) {
+    padding: 0;
+    border: none;
+    margin-bottom: 220px;
+}
+
+.profile__edit-profile-input {
+    padding: 0;
+    border: none;
+    text-align: right;
+    font-size: 11px;
+    line-height: 1.18;
+    font-weight: 500;
+    outline: none;
+}
+.profile__edit-profile-input:focus {
+    background-color: rgba(43, 224, 128, 0.1);
+
+}
+.profile__edit-profile-input::placeholder {
+    color: black;
+}
+
+.profile__edit-profile-input-label {
+    font-size: 11px;
+    line-height: 1.18;
+    font-weight: 500;
+}
+
+.profile__edit-profile-button {
+    width: 100%;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.23;
+    border: none;
+    background-color: #FFF;
+    outline: none;
+    cursor: pointer;
+}
+
+.profile__logout-button {
+    padding: 0;
+    width: 100%;
+    margin-top: 16px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.23;
+    border: none;
+    background-color: #FFF;
+    outline: none;
+    cursor: pointer;
+    color: #EE3465;
+}
+
+@media screen and (max-width: 768px) {
+    .profile {
+        margin-top: 236px;
+        margin-bottom: 269px;
+    }
+    .profile__edit-profile-form {
+        margin-top: 96px;
+    }
+    .profile__input-field:nth-last-child(2) {
+        margin-bottom: 210px;
+    }
+}
+@media screen and (max-width: 479px) {
+    .profile {
+        margin-top: 70px;
+        margin-bottom: 40px;
+    }
+    .profile__edit-profile-form {
+        min-width: 260px;
+    }
+    .profile__edit-profile-form {
+        margin-top: 80px;
+    }
+    .profile__input-field:nth-last-child(2) {
+        margin-bottom: 379px;
+    }
+    .profile__edit-profile-button {
+        font-size: 12px;
+        line-height: 1.25;
+    }
+    .profile__logout-button {
+        font-size: 12px;
+        line-height: 1.25;
+    }
+}
+
+

@@ -1,0 +1,106 @@
+.footer {
+    width: 100%;
+    padding-left: 70px;
+    padding-right: 70px;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    box-sizing: border-box;
+}
+.footer_type_grey {
+    background-color: #FAFAFA;
+}
+.footer__title {
+    text-align: center;
+    width: 100%;
+    min-height: 36px;
+    margin: 79px 0 0;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.23;
+    color: #A0A0A0;
+    border-bottom: 1px solid #E8E8E8;
+}
+.footer__caption-container {
+    margin-top: 20px;
+    width: 100%;
+    font-size: 13px;
+    line-height: 1.23;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.footer__nav-bar-links {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.footer__nav-bar-item {
+    margin-left: 20px;
+}
+.footer__nav-bar-item:first-child {
+    margin-left: 0;
+}
+.footer__nav-bar-link {
+    text-decoration: none;
+    color: #000000;
+}
+.footer__copyright {
+    margin: 0;
+    padding: 0;
+}
+
+@media screen and (max-width: 1024px) and (min-width: 480px) {
+    .footer {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+    .footer_type_grey {
+        background-color: #FFF;
+    }
+}
+
+@media screen and (max-width: 479px) and (min-width: 320px) {
+    .footer {
+        margin-bottom: 10px;
+        padding-right: 10px;
+        padding-left: 10px;
+        padding-bottom: 10px;
+        flex-direction: column;
+    }
+    .footer_type_grey {
+        background-color: #FFF;
+    }
+    .footer__title {
+        font-size: 12px;
+        line-height: 1.25;
+    }
+    .footer__caption-container {
+        margin-top: 30px;
+        flex-direction: column;
+        font-size: 12px;
+        line-height: 1.25;
+    }
+    .footer__nav-bar-links {
+        flex-direction: column;
+    }
+    .footer__nav-bar {
+        margin-top: 0;
+    }
+    .footer__copyright {
+        margin-top: 30px;
+        order: 1;
+    }
+    .footer__nav-bar-item {
+        margin: 12px 0 0;
+    }
+    .footer__nav-bar-item:first-child {
+        margin-top: 0;
+    }
+}

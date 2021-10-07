@@ -1,0 +1,12 @@
+.page__link-transparency {
+    -webkit-transition-property: opacity;
+    -o-transition-property: opacity;
+    -ms-transition-property: opacity;
+    -webkit-transition-duration: 1s;
+    -o-transition-duration: 1s;
+    -ms-transition-duration: 1s;
+    transition-duration: 1s;
+}
+.page__link-transparency:hover {
+    opacity: 0.5;
+}
