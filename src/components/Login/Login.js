@@ -1,19 +1,33 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../images/logo.jpg';
 
-function Login() {
+function Login({ onLogin }) {
+  const [inputEmail, setInputEmail] = useState('');
+  const [inputPassword, setInputPassword] = useState('');
+
+  function handleEmailInputChange(evt) {
+    setInputEmail(evt.target.value);
+  }
+  function handlePasswordInputChange(evt) {
+    setInputPassword(evt.target.value);
+  }
+  function handleLoginSubmit(e) {
+    e.preventDefault();
+    onLogin(inputEmail, inputPassword);
+  }
   return (
       <section className='login'>
           <Link className='logo__link' to='/'><img className='login__logo' src={logo} alt='logo'/></Link>
           <h1 className='login__title'>Рады видеть!</h1>
-          <form className='login__form'>
+          <form className='login__form' onSubmit={handleLoginSubmit}>
               <div className='login__input-field'>
                   <label htmlFor='loginEmail'
                          className='login__input-label'>
                       E-mail</label>
                   <input id='loginEmail' type='e-mail' className='login__input login__input_type_email'
                          placeholder='
-            pochta@yandex.ru' required={true}/>
+            pochta@yandex.ru' required={true} onChange={handleEmailInputChange}/>
                   <span className='login__input-error'>Error</span>
               </div>
               <div className='login__input-field'>
@@ -22,7 +36,7 @@ function Login() {
                       Пароль</label>
                   <input id='loginEmail' type='password'
                          className='login__input login__input_type_password' placeholder='
-            Password'/>
+            Password' onChange={handlePasswordInputChange}/>
                   <span className='login__input-error'>Error</span>
               </div>
               <button className='login__button button-hover-transform' disabled={false}>Войти</button>
