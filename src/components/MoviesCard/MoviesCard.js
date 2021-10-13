@@ -1,12 +1,12 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import './MoviesCard.css';
 
 function MoviesCard({
-  card, savedMovies, onLikeClick, onDislike,
+  card, likedMovies, onLikeClick, onDislike,
 }) {
-  console.log(savedMovies);
-  const isLiked = savedMovies.some((i) => i.movieId === card.id);
-  console.log(isLiked);
+  const location = useLocation();
+  const isLiked = location.pathname === '/movies' ? likedMovies.some((i) => i.movieId === card.id) : true;
   function handleLikeClick() {
     if (!isLiked) {
       return onLikeClick(card);
@@ -22,7 +22,7 @@ function MoviesCard({
   return (
         <li className="card" id={card.id}>
           <a className='card__trailer-link' target={'_blank'} href={`${card.trailerLink}`}>
-            <img className="card__image" alt={`Постер фильма ${card.nameRU}`} src={`https://api.nomoreparties.co${card.image.url}`}/>
+            <img className="card__image" alt={`Постер фильма ${card.nameRU}`} src={`${location.pathname === '/movies' ? 'https://api.nomoreparties.co' : ''}${location.pathname === '/movies' ? card.image.url : card.image}`}/>
           </a>
             <div className="card__image-caption">
                 <h2 className="card__title">{card.nameRU}</h2>

@@ -1,6 +1,6 @@
 .card {
     display: grid;
-    grid-template-rows: 1fr 30px;
+    grid-template-rows: 1fr max-content;
     grid-template-columns: 1fr;
     position: relative;
 }

@@ -1,0 +1,3 @@
+function Slicer (cardsToShow, setter) {
+    
+}

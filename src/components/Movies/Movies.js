@@ -1,59 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import Header from '../Header/Header';
+import React, { useEffect, useState, useContext } from 'react';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
-import moviesApi from '../../utils/MoviesApi';
-import mainApi from '../../utils/MainApi';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 
-function Movies() {
-  const [cards, setCards] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [cardsToShowCounter, setCardsToShowCounter] = useState(12);
-  const [shortFilmCheckboxStatus, setShortFilmCheckboxStatus] = useState(false);
+function Movies({
+  cards,
+  likedMovies,
+  filter,
+  onLikeClick,
+  onDislike,
+}) {
+  const currentUser = useContext(CurrentUserContext);
   const [searchInputValue, setSearchInputValue] = useState('');
   const [moviesToShow, setMoviesToShow] = useState([]);
-  const [savedMovies, setSavedMovies] = useState([]);
-
-  useEffect(() => {
-    mainApi.getSavedMovies()
-      .then((res) => {
-        setSavedMovies(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  function onLikeClick(card) {
-    mainApi.postMovies(card)
-      .then((addedCard) => {
-        setSavedMovies([...savedMovies, addedCard]);
-        console.log('фильм добавлен');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-  function onDislike(card) {
-    const id = savedMovies.find((i) => i.movieId === card.id)._id;
-    mainApi.deleteMovie(id)
-      .then((res) => {
-        const filteredSavedMovies = savedMovies.filter((i) => i.id !== id);
-        setSavedMovies(filteredSavedMovies);
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  const [cardsToShowCounter, setCardsToShowCounter] = useState(12);
+  const [shortFilmCheckboxStatus, setShortFilmCheckboxStatus] = useState(false);
+  const [isLoading] = useState(false);
+  const [searchIsRun, setSearchIsRun] = useState(false);
+  console.log(searchIsRun);
   function slicer(array) {
     return array.slice(0, cardsToShowCounter);
   }
-  function filter(array) {
-    if (shortFilmCheckboxStatus) {
-      return array.filter((card) => card.duration <= 75);
-    }
-    return array;
+  function moreButtonHandler(e) {
+    e.preventDefault();
+    setCardsToShowCounter(cardsToShowCounter + 3);
   }
   function find(array) {
     return array.filter(
@@ -61,28 +31,13 @@ function Movies() {
     );
   }
   useEffect(() => {
-    moviesApi.getMovies()
-      .then((res) => {
-        setCards(res);
-      })
-      .then(() => {
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  useEffect(() => {
-    const movies = JSON.parse(window.localStorage.getItem('movies'));
-    if (movies) {
-      setMoviesToShow(movies);
+    const savedMoviesObject = JSON.parse(window.localStorage.getItem(`movies-${currentUser.email}`));
+    console.log(currentUser);
+    if (savedMoviesObject) {
+      setMoviesToShow(savedMoviesObject.movies);
+      console.log(moviesToShow);
     }
   }, []);
-  function moreButtonHandler(e) {
-    e.preventDefault();
-    setCardsToShowCounter(cardsToShowCounter + 3);
-  }
 
   function handleChangeFilterCheckbox(e) {
     setShortFilmCheckboxStatus(e.target.checked);
@@ -92,15 +47,19 @@ function Movies() {
   }
   function handleSearchFormSubmit(e) {
     e.preventDefault();
+    setSearchIsRun(true);
     const foundCards = find(cards);
     setMoviesToShow(foundCards);
-    window.localStorage.setItem('movies', JSON.stringify(foundCards));
+    const moviesToSave = {
+      user: currentUser.email,
+      searchPhrase: searchInputValue,
+      movies: foundCards,
+    };
+    window.localStorage.setItem(`movies-${currentUser.email}`, JSON.stringify(moviesToSave));
   }
-  console.log(savedMovies);
-  const cardsToShow = slicer(filter(moviesToShow));
+  const cardsToShow = slicer(filter(shortFilmCheckboxStatus, cards));
   return (
         <React.Fragment>
-            <Header/>
             <SearchForm
                 handleChangeFilterCheckbox={ handleChangeFilterCheckbox }
                 shortFilmCheckboxStatus={ shortFilmCheckboxStatus }
@@ -111,13 +70,12 @@ function Movies() {
               ? <MoviesCardList
                 isLoading={isLoading}
                 cardsToShow={cardsToShow || []}
-                moreButtonHandler={moreButtonHandler}
-                savedMovies={savedMovies}
+                likedMovies={likedMovies}
                 onLikeClick={onLikeClick}
                 onDislike={onDislike}
             /> : 'Ничего не найдено'
             }
-
+          <button className='movies__more-button page__link-transparency' onClick={moreButtonHandler}>Ещё</button>
         </React.Fragment>
   );
 }

@@ -1,6 +1,7 @@
 class MainApi {
-  constructor({ mainUrl }) {
+  constructor({ mainUrl, resourceBaseUrl }) {
     this.mainUrl = mainUrl;
+    this.resourceBaseUrl = resourceBaseUrl;
   }
 
   postMovies(card) {
@@ -16,9 +17,9 @@ class MainApi {
         duration: card.duration,
         year: card.year,
         description: card.description,
-        image: 'https://yandex.ru',
-        trailer: 'https://yandex.ru',
-        thumbnail: 'https://yandex.ru',
+        image: `${this.resourceBaseUrl}${card.image.url}`,
+        trailer: card.trailerLink,
+        thumbnail: `${this.resourceBaseUrl}${card.image.formats.thumbnail.url}`,
         movieId: card.id,
         nameRU: card.nameRU,
         nameEN: card.nameEN,
@@ -137,6 +138,9 @@ class MainApi {
   }
 }
 const mainApi = new MainApi(
-  { mainUrl: 'http://localhost:3000' },
+  {
+    mainUrl: 'http://localhost:3000',
+    resourceBaseUrl: 'https://api.nomoreparties.co',
+  },
 );
 export default mainApi;
