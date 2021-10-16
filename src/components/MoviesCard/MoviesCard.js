@@ -18,7 +18,14 @@ function MoviesCard({
     const minutes = duration % 60;
     return `${hours}ч ${minutes}м`;
   }
-
+  function likeButtonClassName() {
+    if (!isLiked && location.pathname === '/movies') {
+      return 'card__button_type_like';
+    } if (isLiked && location.pathname === '/movies') {
+      return 'card__button_type_liked';
+    }
+    return 'card__button_type_dislike';
+  }
   return (
         <li className="card" id={card.id}>
           <a className='card__trailer-link' target={'_blank'} href={`${card.trailerLink}`}>
@@ -29,7 +36,7 @@ function MoviesCard({
               <p className='card__movie-duration'>{getTimeFromMins(card.duration)}</p>
             </div>
           <button type="button" aria-label="addToSavedIcon"
-                  className={isLiked ? 'card__button_type_liked' : 'card__button_type_like'} onClick={handleLikeClick}>
+                  className={likeButtonClassName()} onClick={handleLikeClick}>
           </button>
         </li>
   );

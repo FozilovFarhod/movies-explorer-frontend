@@ -1,3 +1,0 @@
-function Slicer (cardsToShow, setter) {
-    
-}

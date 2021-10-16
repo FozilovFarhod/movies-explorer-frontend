@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import {
+  Route,
+  Switch,
+  useHistory,
+  Redirect,
+} from 'react-router-dom';
 import './App.css';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
@@ -18,14 +23,32 @@ import moviesApi from '../../utils/MoviesApi';
 
 function App() {
   const [cards, setCards] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState({});
-  const [isSuccessRegister, setIsSuccessRegister] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
   const [likedMovies, setLikedMovies] = useState([]);
+  const [isMobile, setIsMobile] = useState(true);
+  const [pageWidth, setPageWidth] = useState(0);
+  const [infoToolTipText, setInfoToolTipText] = useState('');
+  const [isGetMoviesFetchError, setIsGetMoviesFetchError] = useState(false);
   const history = useHistory();
-
+  function updateWidth() {
+    setPageWidth(document.documentElement.scrollWidth);
+  }
+  // Определеяем ширину экрана и проверяем на мобильное устройство
+  useEffect(() => {
+    setPageWidth(document.documentElement.scrollWidth);
+    window.addEventListener('resize', () => {
+      setTimeout(updateWidth, 1000);
+    });
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  });
   useEffect(() => {
     const isJwt = localStorage.getItem('isLoggedIn');
     if (isJwt) {
@@ -35,43 +58,60 @@ function App() {
           setIsLoggedIn(true);
         })
         .catch((res) => {
+          setIsLoggedIn(false);
           console.log(`Ошибка при проверке токена ${res}`);
         });
     } else {
+      setIsLoggedIn(false);
       console.log('Пользователь не авторизовался');
     }
-  },
-  [isLoggedIn]);
-  useEffect(() => {
-    mainApi.getSavedMovies()
-      .then((res) => {
-        setLikedMovies(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [isLoggedIn]);
-  useEffect(() => {
-    moviesApi.getMovies()
-      .then((res) => {
-        setCards(res);
-      })
-      .then(() => {
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   }, []);
   useEffect(() => {
-    mainApi.getUserData()
-      .then((userData) => {
-        setCurrentUser(userData);
-      })
-      .catch((res) => {
-        console.log(`Ошибка при получении данных пользователя ${res}`);
-      });
-  }, [isLoggedIn, setCurrentUser]);
+    const isJwt = localStorage.getItem('isLoggedIn');
+    if (isJwt) {
+      mainApi.getLikedMovies()
+        .then((res) => {
+          setLikedMovies(res);
+        })
+        .catch((err) => {
+          setIsGetMoviesFetchError(true);
+          setInfoToolTipText(`Ошибка при получении фильмов ${err}`);
+          console.log(`Ошибка при получении сохраненных фильмов ${err}`);
+        });
+    }
+  }, [isLoggedIn]);
+  useEffect(() => {
+    const isJwt = localStorage.getItem('isLoggedIn');
+    if (isJwt) {
+      moviesApi.getMovies()
+        .then((res) => {
+          setCards(res);
+        })
+        .then(() => {
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setIsGetMoviesFetchError(true);
+          setInfoToolTipText(`Ошибка при получении фильмов ${err}`);
+          console.log(`Ошибка при получении фильмов ${err}`);
+        });
+    }
+  }, []);
+  useEffect(() => {
+    const isJwt = localStorage.getItem('isLoggedIn');
+    if (isJwt) {
+      mainApi.getUserData()
+        .then((userData) => {
+          setCurrentUser(userData);
+        })
+        .catch((err) => {
+          setIsSuccess(false);
+          setIsInfoTooltipPopupOpen(true);
+          setInfoToolTipText(`Ошибка ${err}`);
+        });
+    }
+  }, [isLoggedIn]);
+
   function filter(shortFilmCheckboxStatus, array) {
     if (shortFilmCheckboxStatus) {
       return array.filter((card) => card.duration <= 75);
@@ -81,14 +121,15 @@ function App() {
 
   function onDislike(card) {
     const id = likedMovies.find((i) => i.movieId === card.id)._id;
-    console.log(id);
     mainApi.deleteMovie(id)
       .then(() => {
         const filteredLikedMovies = likedMovies.filter((i) => i._id !== id);
         setLikedMovies(filteredLikedMovies);
       })
       .catch((err) => {
-        console.log(err);
+        setIsSuccess(false);
+        setIsInfoTooltipPopupOpen(true);
+        setInfoToolTipText(`Ошибка ${err}`);
       });
   }
   function onDelete(card) {
@@ -98,16 +139,9 @@ function App() {
         setLikedMovies(filteredLikedMovies);
       })
       .catch((err) => {
-        console.log(err);
-      });
-  }
-  function onRegister(email, password, name) {
-    mainApi.signUp(email, password, name)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
+        setIsSuccess(false);
+        setIsInfoTooltipPopupOpen(true);
+        setInfoToolTipText(`Ошибка ${err}`);
       });
   }
   function onLogin(email, password) {
@@ -118,19 +152,35 @@ function App() {
         setIsLoggedIn(true);
         history.push('/movies');
       })
-      .catch((res) => {
-        setIsSuccessRegister(false);
+      .catch((err) => {
+        setIsSuccess(false);
         setIsInfoTooltipPopupOpen(true);
-        console.log(`Something goes wrong ${res}`);
+        setInfoToolTipText(`Ошибка ${err}`);
       });
   }
+  function onRegister(email, password, name) {
+    mainApi.signUp(email, password, name)
+      .then((res) => {
+        setCurrentUser(res);
+        setIsLoggedIn(true);
+        onLogin(email, password);
+      })
+      .catch((err) => {
+        setIsSuccess(false);
+        setIsInfoTooltipPopupOpen(true);
+        setInfoToolTipText(`Ошибка ${err}`);
+      });
+  }
+
   function onLikeClick(card) {
     mainApi.postMovies(card)
       .then((addedCard) => {
         setLikedMovies([...likedMovies, addedCard]);
       })
       .catch((err) => {
-        console.log(err);
+        setIsSuccess(false);
+        setIsInfoTooltipPopupOpen(true);
+        setInfoToolTipText(`Ошибка ${err}`);
       });
   }
   function closeAllPopups() {
@@ -153,17 +203,24 @@ function App() {
         setIsLoggedIn(false);
         history.push('./');
       })
-      .catch((res) => {
-        console.log(`Не получилось удалить jwt ${res}`);
+      .catch((err) => {
+        setIsSuccess(false);
+        setIsInfoTooltipPopupOpen(true);
+        setInfoToolTipText(`Ошибка ${err}`);
       });
   }
   function handleUpdateUser(email, name) {
     mainApi.editUserData(email, name)
       .then((userDataUpdated) => {
         setCurrentUser(userDataUpdated);
+        setIsSuccess(true);
+        setIsInfoTooltipPopupOpen(true);
+        setInfoToolTipText('Данные успешно обновлены');
       })
-      .catch((res) => {
-        console.log(`Ошибка при обновлении профиля пользователя ${res}`);
+      .catch((err) => {
+        setIsSuccess(false);
+        setIsInfoTooltipPopupOpen(true);
+        setInfoToolTipText(`Ошибка ${err}`);
       });
   }
   return (
@@ -171,10 +228,11 @@ function App() {
       <React.Fragment>
           <InfoTooltip
               isOpen={isInfoTooltipPopupOpen}
-              isSuccessRegister={isSuccessRegister}
+              isSuccess={isSuccess}
               onClose={closeAllPopups}
               onOverlayClose={handleOverlayClose}
               onEscClose={handleEscClose}
+              infoToolTipText={infoToolTipText}
           />
           <Switch>
           <Route exact path='/'>
@@ -184,32 +242,30 @@ function App() {
           <Main/>
           <Footer/>
           </Route>
-          <Route path='/movies'>
-              <Header
-                  isLoggedIn={isLoggedIn}
-              />
-              <Movies
+          <ProtectedRoute path='/movies'
+              isMobile={isMobile}
+              pageWidth={pageWidth}
+              isLoggedIn={isLoggedIn}
+              component={Movies}
               cards={cards}
               filter={filter}
               likedMovies={likedMovies}
               onLikeClick={onLikeClick}
               onDislike={onDislike}
-              />
-              <Footer/>
-          </Route>
-          <Route path='/saved-movies'>
-              <Header
-                  isLoggedIn={isLoggedIn}
-              />
-              <SavedMovies
+              isGetMoviesFetchError={isGetMoviesFetchError}
+              infoToolTipText={infoToolTipText}
+          />
+          <ProtectedRoute path='/saved-movies'
+            isLoggedIn={isLoggedIn}
+                  component={SavedMovies}
                   isLoading={isLoading}
                   likedMovies={likedMovies}
                   onLikeClick={onLikeClick}
                   onDelete={onDelete}
                   filter={filter}
-              />
-              <Footer/>
-          </Route>
+                  isGetMoviesFetchError={isGetMoviesFetchError}
+                  infoToolTipText={infoToolTipText}
+          />
           <ProtectedRoute path='/profile'
               isLoggedIn={isLoggedIn}
               component={Profile}
@@ -217,14 +273,10 @@ function App() {
               onEditProfile={handleUpdateUser}
           />
           <Route path='/signin'>
-              <Login
-              onLogin={onLogin}
-              />
+            {() => (!isLoggedIn ? <Login onLogin={onLogin}/> : <Redirect to="/"/>)}
           </Route>
           <Route path='/signup'>
-              <Register
-                  onRegister={onRegister}
-              />
+          {() => (!isLoggedIn ? <Register onRegister={onRegister}/> : <Redirect to="/"/>)}
           </Route>
           <Route path='*'>
               <NotFound/>

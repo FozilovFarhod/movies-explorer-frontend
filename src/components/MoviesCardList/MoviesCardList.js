@@ -17,7 +17,7 @@ function MoviesCardList({
                 {cardsToShow.map((card) => (
                     <MoviesCard
                         card={card}
-                        key={card.movieId}
+                        key={card.movieId || card.id}
                         likedMovies={likedMovies}
                         onLikeClick={onLikeClick}
                         onDislike={onDislike}

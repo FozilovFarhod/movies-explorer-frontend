@@ -25,7 +25,7 @@ class MainApi {
         nameEN: card.nameEN,
       }),
     })
-      .then((res) => this.responseHandler(res));
+      .then((res) => this._responseHandler(res));
   }
 
   deleteMovie(id) {
@@ -33,7 +33,7 @@ class MainApi {
       method: 'DELETE',
       credentials: 'include',
     })
-      .then((res) => this.responseHandler(res));
+      .then((res) => this._responseHandler(res));
   }
 
   signUp(email, password, name) {
@@ -49,10 +49,10 @@ class MainApi {
         name,
       }),
     })
-      .then((res) => this.responseHandler(res));
+      .then((res) => this._responseHandler(res));
   }
 
-  getSavedMovies() {
+  getLikedMovies() {
     return fetch(`${this.mainUrl}/movies`, {
       method: 'GET',
       credentials: 'include',
@@ -61,7 +61,7 @@ class MainApi {
         'Content-Type': 'application/json',
       },
     })
-      .then((res) => this.responseHandler(res));
+      .then((res) => this._responseHandler(res));
   }
 
   signIn(email, password) {
@@ -77,7 +77,7 @@ class MainApi {
         password,
       }),
     })
-      .then((res) => this.responseHandler(res));
+      .then((res) => this._responseHandler(res));
   }
 
   getUserData() {
@@ -89,7 +89,7 @@ class MainApi {
           'Content-type': 'application/json',
         },
       })
-      .then((res) => this.responseHandler(res));
+      .then((res) => this._responseHandler(res));
   }
 
   checkToken() {
@@ -101,7 +101,7 @@ class MainApi {
         'Content-Type': 'application/json',
       },
     })
-      .then((res) => this.responseHandler(res));
+      .then((res) => this._responseHandler(res));
   }
 
   signOut() {
@@ -112,7 +112,7 @@ class MainApi {
         'Content-Type': 'application/json',
       },
     })
-      .then((res) => this.responseHandler(res));
+      .then((res) => this._responseHandler(res));
   }
 
   editUserData(email, name) {
@@ -127,10 +127,10 @@ class MainApi {
         name,
       }),
     })
-      .then((res) => this.responseHandler(res));
+      .then((res) => this._responseHandler(res));
   }
 
-  responseHandler = (res) => {
+  _responseHandler = (res) => {
     if (res.ok) {
       return res.json();
     }

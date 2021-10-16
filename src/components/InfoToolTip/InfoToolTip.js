@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 function InfoTooltip({
-  onClose, isOpen, onOverlayClose, onEscClose, isSuccessRegister,
+  onClose, isOpen, onOverlayClose, onEscClose, isSuccess, infoToolTipText,
 }) {
   useEffect(() => {
     if (isOpen) {
@@ -15,8 +15,8 @@ function InfoTooltip({
   return (
         <section className={`popup popup_type_info-tooltip ${isOpen && 'popup_opened'}`} onClick={onOverlayClose}>
             <div className='popup__container'>
-                <div className = {`popup__inner popup__inner_type_${isSuccessRegister ? 'success' : 'failure'}`}></div>
-                <h2 className='popup__title'>{isSuccessRegister ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте ещё раз.'}</h2>
+                <div className = {`popup__inner popup__inner_type_${isSuccess ? 'success' : 'failure'}`}></div>
+                <h2 className='popup__title'>{infoToolTipText}</h2>
                 <button type='button' aria-label='closePopup'
                         className='popup__close-btn page__link-transparency'
                         onClick={onClose}></button>

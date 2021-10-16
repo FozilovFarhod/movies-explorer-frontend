@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import SearchForm from '../SearchForm/SearchForm';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
 
 function SavedMovies({
+  isLoggedIn,
   isLoading,
   likedMovies,
   onLikeClick,
   onDelete,
   filter,
+  isGetMoviesFetchError,
+  infoToolTipText,
 }) {
   const [searchInputValue, setSearchInputValue] = useState('');
   const [shortFilmCheckboxStatus, setShortFilmCheckboxStatus] = useState(false);
@@ -75,6 +80,9 @@ function SavedMovies({
     : filter(shortFilmCheckboxStatus, foundMovies);
   return (
         <React.Fragment>
+          <Header
+        isLoggedIn={isLoggedIn}
+        />
             <SearchForm
                 handleChangeFilterCheckbox={handleChangeFilterCheckbox}
                 shortFilmCheckboxStatus={shortFilmCheckboxStatus}
@@ -90,6 +98,8 @@ function SavedMovies({
                 onDislike={searchIsRun ? handleDeleteInSearchResult : onDelete}
             />
           }
+          {isGetMoviesFetchError && <p>{infoToolTipText}</p>}
+          <Footer/>
         </React.Fragment>
   );
 }
