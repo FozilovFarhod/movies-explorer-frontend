@@ -24,7 +24,8 @@ import moviesApi from '../../utils/MoviesApi';
 function App() {
   const [cards, setCards] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInitialCardsLoading, setIsInitialCardsLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [isSuccess, setIsSuccess] = useState(false);
   const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
@@ -37,6 +38,8 @@ function App() {
   function updateWidth() {
     setPageWidth(document.documentElement.scrollWidth);
   }
+
+  const isJwt = localStorage.getItem('isLoggedIn');
   // Определеяем ширину экрана и проверяем на мобильное устройство
   useEffect(() => {
     setPageWidth(document.documentElement.scrollWidth);
@@ -50,7 +53,7 @@ function App() {
     }
   });
   useEffect(() => {
-    const isJwt = localStorage.getItem('isLoggedIn');
+    console.log(isJwt);
     if (isJwt) {
       mainApi.checkToken()
         .then((res) => {
@@ -67,7 +70,6 @@ function App() {
     }
   }, []);
   useEffect(() => {
-    const isJwt = localStorage.getItem('isLoggedIn');
     if (isJwt) {
       mainApi.getLikedMovies()
         .then((res) => {
@@ -80,25 +82,28 @@ function App() {
         });
     }
   }, [isLoggedIn]);
-  useEffect(() => {
-    const isJwt = localStorage.getItem('isLoggedIn');
-    if (isJwt) {
+  function getAllMovies(callback) {
+    if (cards.length === 0) {
+      setIsInitialCardsLoading(true);
       moviesApi.getMovies()
         .then((res) => {
           setCards(res);
+          return res;
         })
-        .then(() => {
-          setIsLoading(false);
+        .then((res) => {
+          callback(res);
         })
-        .catch((err) => {
+        .catch(() => {
           setIsGetMoviesFetchError(true);
-          setInfoToolTipText(`Ошибка при получении фильмов ${err}`);
-          console.log(`Ошибка при получении фильмов ${err}`);
+          setInfoToolTipText('Во время запроса произошла ошибка. Возможно,проблема с соединениемили сервер недоступен. Подождите немного и попробуйте еще раз');
+        })
+        .finally(() => {
+          setIsInitialCardsLoading(false);
+          setIsLoading(false);
         });
     }
-  }, []);
+  }
   useEffect(() => {
-    const isJwt = localStorage.getItem('isLoggedIn');
     if (isJwt) {
       mainApi.getUserData()
         .then((userData) => {
@@ -114,7 +119,7 @@ function App() {
 
   function filter(shortFilmCheckboxStatus, array) {
     if (shortFilmCheckboxStatus) {
-      return array.filter((card) => card.duration <= 75);
+      return array.filter((card) => card.duration <= 40);
     }
     return array;
   }
@@ -162,7 +167,7 @@ function App() {
     mainApi.signUp(email, password, name)
       .then((res) => {
         setCurrentUser(res);
-        setIsLoggedIn(true);
+        setIsLoggedIn(false);
         onLogin(email, password);
       })
       .catch((err) => {
@@ -200,6 +205,7 @@ function App() {
     mainApi.signOut()
       .then(() => {
         localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem(`movies-${currentUser.email}`);
         setIsLoggedIn(false);
         history.push('./');
       })
@@ -243,6 +249,8 @@ function App() {
           <Footer/>
           </Route>
           <ProtectedRoute path='/movies'
+              getAllMovies={getAllMovies}
+              isInitialCardsLoading={isInitialCardsLoading}
               isMobile={isMobile}
               pageWidth={pageWidth}
               isLoggedIn={isLoggedIn}
@@ -256,7 +264,7 @@ function App() {
               infoToolTipText={infoToolTipText}
           />
           <ProtectedRoute path='/saved-movies'
-            isLoggedIn={isLoggedIn}
+                  isLoggedIn={isLoggedIn}
                   component={SavedMovies}
                   isLoading={isLoading}
                   likedMovies={likedMovies}
@@ -273,10 +281,10 @@ function App() {
               onEditProfile={handleUpdateUser}
           />
           <Route path='/signin'>
-            {() => (!isLoggedIn ? <Login onLogin={onLogin}/> : <Redirect to="/"/>)}
+            {() => (!isJwt ? <Login onLogin={onLogin}/> : <Redirect to="/"/>)}
           </Route>
           <Route path='/signup'>
-          {() => (!isLoggedIn ? <Register onRegister={onRegister}/> : <Redirect to="/"/>)}
+          {() => (!isJwt ? <Register onRegister={onRegister}/> : <Redirect to="/"/>)}
           </Route>
           <Route path='*'>
               <NotFound/>

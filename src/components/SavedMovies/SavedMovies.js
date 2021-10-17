@@ -41,8 +41,6 @@ function SavedMovies({
     setFoundMovies(foundCards);
   }
   function handleDeleteInSearchResult(card) {
-    console.log(card);
-    console.log(foundMovies);
     onDelete(card);
     setFoundMovies(foundMovies.filter((i) => i._id !== card._id));
   }

@@ -20,8 +20,6 @@ function Login({ onLogin }) {
     e.preventDefault();
     onLogin(inputEmail, inputPassword);
   }
-  console.log(validation.touchedFields);
-  console.log(validation.errors);
   return (
       <section className='login'>
           <Link className='logo__link' to='/'><img className='login__logo' src={logo} alt='logo'/></Link>

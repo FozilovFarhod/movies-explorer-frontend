@@ -4,8 +4,10 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import Preloader from '../Preloader/Preloader';
 
 function Movies({
+  getAllMovies,
   isMobile,
   pageWidth,
   isLoggedIn,
@@ -16,15 +18,15 @@ function Movies({
   onDislike,
   isGetMoviesFetchError,
   infoToolTipText,
+  isInitialCardsLoading,
 }) {
   const [searchInputValue, setSearchInputValue] = useState('');
   const [moviesToShow, setMoviesToShow] = useState([]);
   const [cardsToShowCounter, setCardsToShowCounter] = useState(0);
   const [shortFilmCheckboxStatus, setShortFilmCheckboxStatus] = useState(false);
-  const [isLoading] = useState(false);
   const [isMoreButton, setIsMoreButton] = useState(false);
-  const [searchIsRun, setSearchIsRun] = useState(false);
   const [emptyErrorMessage, setEmptyErrorMessage] = useState('');
+  const [searchIsRun, setSearchIsRun] = useState(false);
   const currentUser = useContext(CurrentUserContext);
 
   useEffect(() => {
@@ -60,10 +62,8 @@ function Movies({
   function handleSearchInput(e) {
     setSearchInputValue(e.target.value);
   }
-  function handleSearchFormSubmit(e) {
-    e.preventDefault();
-    setSearchIsRun(true);
-    const foundCards = find(cards);
+  function handleFoundCards(res) {
+    const foundCards = find(res);
     setMoviesToShow(foundCards);
     if (foundCards.length !== 0) {
       const moviesToSave = {
@@ -71,9 +71,20 @@ function Movies({
         searchPhrase: searchInputValue,
         movies: foundCards,
       };
-      window.localStorage.setItem(`movies-${currentUser.email}`, JSON.stringify(moviesToSave));
+      window.localStorage.setItem(`movies-${currentUser.email}`,
+        JSON.stringify(moviesToSave));
     }
   }
+  function handleSearchFormSubmit(e) {
+    e.preventDefault();
+    setSearchIsRun(true);
+    if (cards.length === 0) {
+      getAllMovies(handleFoundCards);
+    } else {
+      handleFoundCards(cards);
+    }
+  }
+
   useEffect(() => {
     const savedMoviesObject = JSON.parse(window.localStorage.getItem(`movies-${currentUser.email}`));
     if (savedMoviesObject) {
@@ -84,7 +95,7 @@ function Movies({
   const filteredCards = filter(shortFilmCheckboxStatus, moviesToShow);
   const cardsToShow = slicer(filteredCards);
   function showNotFoundNotification() {
-    if (!searchIsRun && moviesToShow.length === 0) {
+    if (!searchIsRun && moviesToShow.length === 0 && !isGetMoviesFetchError) {
       return (
         <React.Fragment>
             <p>Начните поиск</p>
@@ -127,17 +138,16 @@ function Movies({
                 setEmptyErrorMessage={setEmptyErrorMessage}
             />
             <p>{emptyErrorMessage}</p>
-            {
-            showNotFoundNotification()
+            {isInitialCardsLoading ? <Preloader/>
+              : showNotFoundNotification()
             || <MoviesCardList
-                isLoading={isLoading}
                 cardsToShow={cardsToShow}
                 likedMovies={likedMovies}
                 onLikeClick={onLikeClick}
                 onDislike={onDislike}
             />
             }
-            {isGetMoviesFetchError && <p>{infoToolTipText}</p>}
+            {isGetMoviesFetchError && <p className='movies__error-message'>{infoToolTipText}</p>}
             {
             isMoreButton
             && <button className='movies__more-button page__link-transparency' onClick={moreButtonHandler}>Ещё</button>
