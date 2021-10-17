@@ -139,7 +139,7 @@ class MainApi {
 }
 const mainApi = new MainApi(
   {
-    mainUrl: 'http://api.ffozilov.nomoredomains.monster',
+    mainUrl: 'https://api.ffozilov.nomoredomains.monster',
     resourceBaseUrl: 'https://api.nomoreparties.co',
   },
 );
