@@ -28,7 +28,7 @@ function MoviesCard({
   }
   return (
         <li className="card" id={card.id}>
-          <a className='card__trailer-link' target={'_blank'} href={`${card.trailerLink}`}>
+          <a className='card__trailer-link' target={'_blank'} href={`${location.pathname === '/movies' ? card.trailerLink : card.trailer}`}>
             <img className="card__image" alt={`Постер фильма ${card.nameRU}`} src={`${location.pathname === '/movies' ? 'https://api.nomoreparties.co' : ''}${location.pathname === '/movies' ? card.image.url : card.image}`}/>
           </a>
             <div className="card__image-caption">
