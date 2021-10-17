@@ -30,6 +30,7 @@
     padding-bottom: 16px;
     border-bottom: 1px solid #E8E8E8;
     margin-bottom: 18px;
+    position: relative;
 }
 
 .profile__input-field:nth-last-child(2) {
@@ -71,7 +72,9 @@
     outline: none;
     cursor: pointer;
 }
-
+profile__edit-profile-button:disabled {
+    opacity: 0.2;
+}
 .profile__logout-button {
     padding: 0;
     width: 100%;
@@ -85,7 +88,14 @@
     cursor: pointer;
     color: #EE3465;
 }
-
+.profile__input-error {
+    position: absolute;
+    top: 100%;
+    right: 10px;
+    font-size: 10px;
+    line-height: 1.2;
+    color: #EE3465;
+}
 @media screen and (max-width: 768px) {
     .profile {
         margin-top: 236px;

@@ -1,0 +1,6 @@
+.movies__error-message {
+  max-width: 50%;
+  margin: auto;
+  color: red;
+  text-align: center;
+}

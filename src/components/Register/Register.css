@@ -86,6 +86,9 @@
     font-size: 14px;
     line-height: 1.21;
 }
+.register__register-button:disabled {
+    background-color: #A0A0A0;
+}
 
 .register__register-link-field {
     display: flex;
